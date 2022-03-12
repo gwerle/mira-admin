@@ -26,7 +26,15 @@ import { useEffect, useMemo, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { BiMap } from 'react-icons/bi';
 import { ProducerFormI, ProducerI } from '../@types';
-import { PRODUCTION_SYSTEMS } from '../config/constants';
+import {
+  CAGE_FREE_OPTIONS,
+  IN_TRANSITION_OPTIONS,
+  ORGANIC_OPTIONS,
+  PRODUCTION_SYSTEMS,
+  RED_NECK_OPTIONS,
+  THREE_PRODUCTION_SYSTEMS_OPTIONS,
+  TWO_PRODUCTION_SYSTEMS_OPTIONS,
+} from '../config/constants';
 import { createProducer, modifyProducer } from '../services/ProducerService';
 
 type Props = {
@@ -39,6 +47,7 @@ type Props = {
 const multipleProductionSystems = [
   '2_SISTEMAS_PRODUCAO',
   '3_SISTEMAS_PRODUCAO',
+  'EM_TRANSICAO',
 ];
 
 const ProducerInput = ({ label, type, InputProps }: any): JSX.Element => {
@@ -184,6 +193,25 @@ export default function ProducerModal({
     }
   };
 
+  const getProductionSystemOptions = (): any[] => {
+    switch (productionSystemEnumValue) {
+      case '2_SISTEMAS_PRODUCAO':
+        return TWO_PRODUCTION_SYSTEMS_OPTIONS;
+      case '3_SISTEMAS_PRODUCAO':
+        return THREE_PRODUCTION_SYSTEMS_OPTIONS;
+      case 'CAIPIRA':
+        return RED_NECK_OPTIONS;
+      case 'LIVRE_GAIOLA':
+        return CAGE_FREE_OPTIONS;
+      case 'ORGANICO':
+        return ORGANIC_OPTIONS;
+      case 'EM_TRANSICAO':
+        return IN_TRANSITION_OPTIONS;
+      default:
+        return [];
+    }
+  };
+
   return (
     <Modal isOpen={isOpen} onClose={handleClickCloseIcon} size="full">
       <ModalOverlay />
@@ -250,10 +278,10 @@ export default function ProducerModal({
               />
 
               <FormControl width="fit-content" mt="10px">
-                <FormLabel fontSize="12px">Sistema de Produção</FormLabel>
+                <FormLabel fontSize="12px">Camada Mapa</FormLabel>
                 <Select
                   mb="20px"
-                  placeholder="Sistema de Produção"
+                  placeholder="Camada Mapa"
                   size="sm"
                   width="300px"
                   background="gray.100"
@@ -269,16 +297,30 @@ export default function ProducerModal({
                 </Select>
               </FormControl>
 
-              <ProducerInput
-                label="Sistema de Produção"
-                type="text"
-                InputProps={{
-                  ...register('productionSystem'),
-                  disabled: !multipleProductionSystems.includes(
-                    productionSystemEnumValue
-                  ),
-                }}
-              />
+              <FormControl width="fit-content" mt="10px" ml="20px">
+                <FormLabel fontSize="12px">Sistema de Produção</FormLabel>
+                <Select
+                  mb="20px"
+                  placeholder="Sistema de Produção"
+                  size="sm"
+                  width="300px"
+                  background="gray.100"
+                  disabled={
+                    !multipleProductionSystems.includes(
+                      productionSystemEnumValue
+                    )
+                  }
+                  {...register('productionSystem')}
+                >
+                  {getProductionSystemOptions().map(productionSystem => {
+                    return (
+                      <option value={productionSystem}>
+                        {productionSystem}
+                      </option>
+                    );
+                  })}
+                </Select>
+              </FormControl>
 
               <ProducerInput
                 label="Tipo de Ovo"
