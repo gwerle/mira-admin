@@ -1,29 +1,11 @@
 import Cookies from 'cookies';
 import { GetServerSideProps } from 'next';
 import { Secret, verify } from 'jsonwebtoken';
-import {
-  IconButton,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
-  Table,
-  Tbody,
-  Td,
-  Th,
-  Thead,
-  Tr,
-  Flex,
-  useDisclosure,
-} from '@chakra-ui/react';
-import { FiMoreVertical } from 'react-icons/fi';
-import { MdEdit, MdDelete } from 'react-icons/md';
-import { useState } from 'react';
+import { Table, Tbody, Td, Th, Thead, Tr, Flex } from '@chakra-ui/react';
 import { Header } from '../components/Header';
 import { getProducers } from '../services/ProducerService';
 import { ProducerI } from '../@types';
-import ProducerModal from '../components/ProducerModal';
-import ConfirmationModal from '../components/ConfirmationModal';
+import TableItem from '../components/TableItem';
 
 type Props = {
   producers: ProducerI[];
@@ -46,10 +28,6 @@ const usedKeys = [
 ];
 
 export default function Producers({ producers }: Props): JSX.Element {
-  const [openProducer, setOpenProducer] = useState<ProducerI | null>(null);
-  const [isDeleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false);
-  const { onOpen, isOpen, onClose } = useDisclosure();
-
   return (
     <>
       <Header />
@@ -81,49 +59,12 @@ export default function Producers({ producers }: Props): JSX.Element {
                       </Td>
                     );
                   })}
-                  <Td>
-                    <Menu>
-                      <MenuButton
-                        as={IconButton}
-                        aria-label="Options"
-                        icon={<FiMoreVertical />}
-                        variant="outline"
-                        size="sm"
-                        onClick={() => setOpenProducer(producer)}
-                      />
-                      <MenuList>
-                        <MenuItem
-                          icon={<MdEdit fontSize="15" />}
-                          onClick={onOpen}
-                        >
-                          Editar
-                        </MenuItem>
-
-                        <MenuItem
-                          icon={<MdDelete fontSize="15" />}
-                          onClick={() => setDeleteConfirmationOpen(true)}
-                        >
-                          Deletar
-                        </MenuItem>
-                      </MenuList>
-                    </Menu>
-                  </Td>
+                  <TableItem producer={producer} />
                 </Tr>
               );
             })}
           </Tbody>
         </Table>
-        <ProducerModal
-          isOpen={isOpen}
-          onClose={onClose}
-          editMode
-          producer={openProducer as ProducerI}
-        />
-        <ConfirmationModal
-          isOpen={isDeleteConfirmationOpen}
-          onClose={() => setDeleteConfirmationOpen(false)}
-          producerId={openProducer?.id as number}
-        />
       </Flex>
     </>
   );

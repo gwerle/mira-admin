@@ -118,7 +118,7 @@ export default function ProducerModal({
       setValue('latitude', Number(lat));
       setValue('longitude', Number(lng));
     }
-  }, [producer]);
+  }, [producer, editMode]);
 
   const Map = useMemo(
     () =>
