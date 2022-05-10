@@ -33,6 +33,11 @@ export default function TableItem({ producer }: Props): JSX.Element {
     setOpenProducer(null);
   };
 
+  const handleClickDeleteButton = (): void => {
+    setOpenProducer(producer);
+    setDeleteConfirmationOpen(true);
+  };
+
   return (
     <>
       <Td>
@@ -54,7 +59,7 @@ export default function TableItem({ producer }: Props): JSX.Element {
 
             <MenuItem
               icon={<MdDelete fontSize="15" />}
-              onClick={() => setDeleteConfirmationOpen(true)}
+              onClick={handleClickDeleteButton}
             >
               Deletar
             </MenuItem>
