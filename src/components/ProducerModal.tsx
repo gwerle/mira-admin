@@ -166,10 +166,22 @@ export default function ProducerModal({
   };
 
   const onSubmitForm = async (data: any): Promise<void> => {
+    const latNumber = Number(data.latitude);
+    const longNumber = Number(data.longitude);
+    if (latNumber > 6 || latNumber < -34) {
+      alert('O ponto informado está fora do território do Brasil');
+      return;
+    }
+
+    if (longNumber > -34 || longNumber < -74) {
+      alert('O ponto informado está fora do território do Brasil');
+      return;
+    }
+
     const dataFormatted = {
       ...data,
-      lat: Number(data.latitude),
-      long: Number(data.longitude),
+      lat: latNumber,
+      long: longNumber,
       cep: Number(data.CEP),
       permissionToSendInfo: data.permissionToSendInfo === 'true',
     };
